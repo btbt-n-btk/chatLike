@@ -1,0 +1,111 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>チャットアプリ風</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .chat-container {
+            width: 300px;
+            background: white;
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .chat-box {
+            height: 300px;
+            overflow-y: auto;
+            border-bottom: 1px solid #ddd;
+            padding: 10px;
+        }
+        .message {
+            padding: 5px 10px;
+            border-radius: 5px;
+            margin: 5px 0;
+            max-width: 80%;
+            white-space: pre-wrap;
+        }
+        .user {
+            background: #dcf8c6;
+            align-self: flex-end;
+        }
+        .bot {
+            background: #eee;
+            align-self: flex-start;
+        }
+        .input-container {
+            display: flex;
+            margin-top: 10px;
+        }
+        textarea {
+            flex: 1;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            resize: none;
+            height: 40px;
+        }
+        button {
+            padding: 5px 10px;
+            margin-left: 5px;
+            border: none;
+            background: #007bff;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-box" id="chat-box"></div>
+        <div class="input-container">
+            <textarea id="user-input" placeholder="メッセージを入力..."></textarea>
+            <button onclick="sendMessage()">送信</button>
+        </div>
+    </div>
+    
+    <script>
+        document.getElementById("user-input").addEventListener("keydown", function(event) {
+            if (event.key === "Enter" && event.ctrlKey) {
+                sendMessage();
+                event.preventDefault();
+            }
+        });
+        
+        function sendMessage() {
+            const inputField = document.getElementById("user-input");
+            const message = inputField.value.trim();
+            if (message === "") return;
+            
+            addMessage(message, "user");
+            setTimeout(() => addMessage(modifyMessage(message), "bot"), 500);
+            
+            inputField.value = "";
+        }
+        
+        function addMessage(text, sender) {
+            const chatBox = document.getElementById("chat-box");
+            const messageDiv = document.createElement("div");
+            messageDiv.classList.add("message", sender);
+            messageDiv.innerHTML = text.replace(/\n/g, "<br>");
+            chatBox.appendChild(messageDiv);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+        
+        function modifyMessage(text) {
+            const decorations = ["お゛っ♡", "あん♡", "う゛っ♡"];
+            return text.split('').map(char => Math.random() < 0.2 ? char + decorations[Math.floor(Math.random() * decorations.length)] : char).join('');
+        }
+    </script>
+</body>
+</html>
